@@ -1,29 +1,48 @@
 #!/usr/bin/python3
-"""factorize given set of numbers in a file to product of two small numbers"""
-from sys import argv
 
+def get_factors(num: int):
+    """
+    Factorizes the given number into two smaller factors, if possible.
+    Prints the factorization in the format "num=factor1*factor2".
+    """
+    itr = 2
 
-def factorize(number_to_check):
-    """"find two small numbers that multiply to give a given number"""
-    i = 2
-
-    if number_to_check < 2:
+    # Check if the number is less than 2, since we cannot factorize numbers less than 2
+    if num < 2:
         return
-    
-    while number_to_check % i:
-        i += 1
-    print("{:.0f}={:.0f}*{:.0f}".format(number_to_check, number_to_check / i, i))
 
-if len(argv) != 2:
-    exit()
+    # Keep dividing the number by the iterator until it's no longer divisible
+    while num % itr:
+        itr += 1
 
-try:
-    with open(argv[1]) as file:
-        line = file.readline()
+    # Once the loop ends, itr should be a factor of num
+    # We can print the factorization in the required format
+    print("{}={}*{}".format(num, num//itr, itr))
 
-        while line != "":
-            number_to_check = int(line.split('\n')[0])
-            factorize(number_to_check)
-            line = file.readline()
-except:
-    pass
+
+if __name__ == "__main__":
+    from sys import argv as sa
+
+    # Check if the script was called with the filename argument
+    if len(sa) == 2:
+        filename = sa[1]
+        try:
+            # Try to open the file with the given filename
+            with open(filename, mode="r", encoding="utf-8") as file:
+                # Read one line from the file
+                one_line = file.readline()
+                while one_line != "":
+                    # Convert the line to an integer
+                    number = int(one_line.strip())
+                    # Factorize the number and print the result
+                    get_factors(number)
+                    # Read the next line from the file
+                    one_line = file.readline()
+        # Handle the case where the file cannot be found
+        except FileNotFoundError:
+            pass
+        # Handle the case where the filename argument is not provided
+        except IndexError:
+            pass
+    else:
+        exit()
